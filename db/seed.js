@@ -1,19 +1,25 @@
 'use strict'
 
 const db = require('APP/db')
-    , {User, Thing, Favorite, Promise} = db
+    , {User, Thing, Favorite, Income, IncomeSpouse, Promise} = db
     , {mapValues} = require('lodash')
 
 function seedEverything() {
   const seeded = {
     users: users(),
     things: things(),
+    income: income(),
+    incomeSpouse: incomeSpouse()
   }
 
   seeded.favorites = favorites(seeded)
 
   return Promise.props(seeded)
 }
+
+const income = seed(Income, require('../seed.json').income)
+
+const incomeSpouse = seed(IncomeSpouse, require('../seed.json').incomeSpouse)
 
 const users = seed(User, {
   god: {
@@ -135,4 +141,4 @@ function seed(Model, rows) {
   }
 }
 
-module.exports = Object.assign(seed, {users, things, favorites})
+module.exports = Object.assign(seed, {users, things, favorites, income, incomeSpouse})
