@@ -12,12 +12,19 @@ import {Router, Route, IndexRedirect, browserHistory} from 'react-router'
 import {render} from 'react-dom'
 import {connect, Provider} from 'react-redux'
 
+import {getCashflowSpouse, getCashflow} from './reducers/projections.jsx'
+
 import store from './store'
 import Jokes from './components/Jokes'
 import Login from './components/Login'
 import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
 import CashflowProjection from './components/CashflowProjection.jsx'
+
+const getSampleCashflow = () => {
+  store.dispatch(getCashflowSpouse())
+  store.dispatch(getCashflow())
+}
 
 const ExampleApp = connect(
   ({ auth }) => ({ user: auth })
@@ -31,9 +38,8 @@ const ExampleApp = connect(
 render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" component={ExampleApp}>
+      <Route path="/" component={ExampleApp} onEnter={getSampleCashflow}>
         <IndexRedirect to="/projection" />
-        <Route path="/jokes" component={Jokes} />
         <Route path="/projection" component={CashflowProjection} />
       </Route>
       <Route path='*' component={NotFound} />
