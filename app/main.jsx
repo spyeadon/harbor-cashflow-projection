@@ -21,7 +21,7 @@ import WhoAmI from './components/WhoAmI'
 import NotFound from './components/NotFound'
 import CashflowProjection from './components/CashflowProjection.jsx'
 
-const getSampleCashflow = () => {
+const retrieveCashflow = () => {
   store.dispatch(getCashflowSpouse())
   store.dispatch(getCashflow())
 }
@@ -38,7 +38,7 @@ const ExampleApp = connect(
 render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" component={ExampleApp} onEnter={getSampleCashflow}>
+      <Route path="/" component={ExampleApp} onEnter={retrieveCashflow}>
         <IndexRedirect to="/projection" />
         <Route path="/projection" component={CashflowProjection} />
       </Route>

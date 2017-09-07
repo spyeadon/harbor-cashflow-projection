@@ -6,6 +6,20 @@ export const toggleSpouse = spouse => ({
   spouse
 })
 
+const SET_BIRTHDAYS = 'SET_BIRTHDAYS'
+export const setBirthdays = (userBirthday, spouseBirthday) => ({
+  type: SET_BIRTHDAYS,
+  userBirthday,
+  spouseBirthday
+})
+
+export const viewCashflow = (userBirthday, spouseBirthday) =>
+  dispatch => {
+    dispatch(setBirthdays(userBirthday, spouseBirthday))
+    if (spouseBirthday) dispatch(toggleSpouse(true))
+    else dispatch(toggleSpouse(false))
+  }
+
 const CASHFLOW = 'CASHFLOW'
 const cashflow = cashflow => ({
   type: CASHFLOW,
@@ -34,8 +48,8 @@ const initialState = {
     individual: []
   },
   joint: false,
-  user_birthday: new Date,
-  spouse_birthday: new Date
+  user_birthday: null,
+  spouse_birthday: null
 }
 
 const projections = (state = initialState, action) => {
@@ -51,6 +65,15 @@ const projections = (state = initialState, action) => {
   case (CASHFLOW_SPOUSE):
     cashflow.spouse = action.cashflowSpouse
     newState.cashflow = cashflow
+    return newState
+
+  case (TOGGLE_SPOUSE):
+    newState.joint = action.spouse
+    return newState
+
+  case (SET_BIRTHDAYS):
+    newState.user_birthday = action.userBirthday
+    newState.spouse_birthday = action.spouseBirthday
     return newState
 
   default:
