@@ -66,10 +66,15 @@ class CashProjComponent extends React.Component {
         />
         <input type="submit" value="View Cashflow Projection" />
       </form>
-      <div style={{width: '20%', margin: '0', display: 'inline-block'}}>
+      <div style={{width: '15%', margin: '0', display: 'inline-block'}}>
         <Grid
-          rows={rows}
-          columns={columns}>
+          rows={[{dataPoint: 'Age'},
+            {dataPoint: 'Income from Work'},
+            {dataPoint: 'Social Security'},
+            {dataPoint: 'Asset Income'},
+            {dataPoint: 'Total'}
+          ]}
+          columns={[{name: 'dataPoint', title: 'Year'}]}>
           <PagingState />
           <LocalPaging />
           <TableView />
@@ -77,7 +82,7 @@ class CashProjComponent extends React.Component {
           <PagingPanel />
         </Grid>
       </div>
-      <div style={{width: '80%', margin: '0', display: 'inline-block'}}>
+      <div style={{width: '40%', margin: '0', display: 'inline-block'}}>
         <Grid
           rows={rows}
           columns={columns}>
