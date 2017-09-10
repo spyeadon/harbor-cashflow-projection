@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {generateRows, generateColumns} from '../utils.js'
+import {generateRows, generateColumns, calculateAge} from '../utils.js'
 import {viewCashflow} from '../reducers/projections.jsx'
 import {
   PagingState, LocalPaging
@@ -21,15 +21,31 @@ class CashProjComponent extends React.Component {
 
   renderProjections(evt) {
     evt.preventDefault()
-    this.props.showProjections(evt.target.userBirthday.value, evt.target.spouseBirthday.value)
-    if (this.props.cashflow) {
-      this.setState({columns: generateColumns(this.props.cashflow, this.props.joint)})
+    const userAge = evt.target.userBirthday.value
+    const spouseAge = evt.target.spouseBirthday.value
+    if (isNaN(calculateAge(new Date(userAge)))) {
+      window.alert('Please use the format: MM/DD/YYYY')
+    } else {
+      this.props.showProjections(userAge, spouseAge)
+      if (this.props.cashflow) {
+        this.setState({columns: generateColumns(
+          this.props.cashflow,
+          this.props.joint
+        )})
+        this.setState({rows: generateRows(
+          this.props.cashflow,
+          this.props.joint,
+          calculateAge(new Date(userAge)),
+          calculateAge(new Date(spouseAge))
+        )})
+      }
     }
   }
 
   render() {
     const {rows, columns} = this.state
     console.log('columns are: ', columns)
+    console.log('rows are: ', rows)
 
     return (
     <div>
@@ -50,12 +66,22 @@ class CashProjComponent extends React.Component {
         />
         <input type="submit" value="View Cashflow Projection" />
       </form>
-      <div>
+      <div style={{width: '20%', margin: '0', display: 'inline-block'}}>
         <Grid
           rows={rows}
-          columns={columns}
-        >
-          <PagingState pageSize={5} />
+          columns={columns}>
+          <PagingState />
+          <LocalPaging />
+          <TableView />
+          <TableHeaderRow />
+          <PagingPanel />
+        </Grid>
+      </div>
+      <div style={{width: '80%', margin: '0', display: 'inline-block'}}>
+        <Grid
+          rows={rows}
+          columns={columns}>
+          <PagingState pageSize={5} defaultPageSize={5} />
           <LocalPaging />
           <TableView />
           <TableHeaderRow />
