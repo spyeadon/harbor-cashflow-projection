@@ -25,35 +25,21 @@ const generateAgeRow = (data, userAge, spouseAge = NaN) => {
   }
 }
 
-export const defaultDataPoints = joint => {
-  if (joint) return ['user_work', 'user_social_security', 'asset_income', 'total']
-  else return ['user_work', 'user_social_security', 'asset_income', 'total']
-}
-
 const formatSpouseCashflow = (data, userAge, spouseAge) => {
-  const rowHeaders = defaultDataPoints(true)
+
 }
 
-const formatIndividualCashflow = (data, userAge) => {
-  const row = [generateAgeRow(data, userAge)]
-  return row.concat(defaultDataPoints(false).map(dataPoint =>
-    data.reduce((row, yearObj) => {
-      const currentYear = yearObj.end_date.split('-')[0]
-      if (yearObj[dataPoint]) row[currentYear] = formatNumberStr(yearObj[dataPoint])
-      else row[currentYear] = formatNumberStr(yearObj.sources[dataPoint])
-      return row
-    }, {})
-  ))
-}
+const formatIndividualCashflow = data =>
+  data.map(yearObj => ({
+    year: yearObj.end_date.split('-')[0],
+    user_work: formatNumberStr(yearObj.sources.user_work),
+    user_social_security: formatNumberStr(yearObj.sources.user_social_security),
+    asset_income: formatNumberStr(yearObj.sources.asset_income),
+    total: formatNumberStr(yearObj.total)
+  }))
 
 export const generateRows = (data, joint, userAge, spouseAge = null) => {
   const cashflow = isJointAccount(data, joint)
   if (joint) return formatSpouseCashflow(cashflow, userAge, spouseAge)
-  else return formatIndividualCashflow(cashflow, userAge)
+  else return formatIndividualCashflow(cashflow)
 }
-
-export const generateColumns = (data, joint) =>
-  isJointAccount(data, joint).map(year => {
-    const currentYear = year.end_date.split('-')[0]
-    return {name: currentYear, title: currentYear}
-  })
