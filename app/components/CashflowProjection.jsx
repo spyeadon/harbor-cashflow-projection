@@ -1,12 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {generateRows, generateColumns, calculateAge} from '../utils.js'
+import {generateRows, calculateAge} from '../utils.js'
 import {viewCashflow} from '../reducers/projections.jsx'
 import {
-  PagingState, LocalPaging
+  PagingState, LocalPaging, RowDetailState
 } from '@devexpress/dx-react-grid'
 import {
-  Grid, TableView, TableHeaderRow, PagingPanel
+  Grid, TableView, TableHeaderRow, PagingPanel, TableRowDetail
 } from '@devexpress/dx-react-grid-material-ui'
 
 class CashProjComponent extends React.Component {
@@ -16,37 +16,71 @@ class CashProjComponent extends React.Component {
       rows: [],
       columns: [
         { name: 'year', title: 'Year' },
-        { name: 'user_work', title: 'Income from Work' },
-        { name: 'user_social_security', title: 'Social Security' },
+        { name: 'work', title: 'Income from Work' },
+        { name: 'social_security', title: 'Social Security' },
         { name: 'asset_income', title: 'Asset Income' },
         { name: 'total', title: 'Combined Income' },
       ]
     }
     this.renderProjections = this.renderProjections.bind(this)
+    this.generateRowDetails = this.generateRowDetails.bind(this)
+    this.checkDateFormat = this.checkDateFormat.bind(this)
+  }
+
+  checkDateFormat(age) {
+    const ageArr = age.split('/')
+    if (ageArr.length === 3 && ageArr[0].length === 2 && ageArr[1].length === 2 && ageArr[2].length === 4 && !isNaN(calculateAge(age))) {
+      return true
+    } else {
+      window.alert('Please use the format: MM/DD/YYYY')
+      return false
+    }
   }
 
   renderProjections(evt) {
     evt.preventDefault()
     const userAge = evt.target.userBirthday.value
     const spouseAge = evt.target.spouseBirthday.value
-    if (isNaN(calculateAge(new Date(userAge)))) {
-      window.alert('Please use the format: MM/DD/YYYY')
-    } else {
-      this.props.showProjections(userAge, spouseAge)
-      if (this.props.cashflow) {
+    if (userAge.length && !spouseAge.length) {
+      if (this.checkDateFormat(userAge) && this.props.cashflow) {
+        this.props.updateBirthdays(userAge, spouseAge)
         this.setState({rows: generateRows(
           this.props.cashflow,
-          this.props.joint,
-          calculateAge(new Date(userAge)),
-          calculateAge(new Date(spouseAge))
+          false,
+          calculateAge(userAge),
+          calculateAge(spouseAge)
         )})
       }
+    } else if (userAge.length && spouseAge.length) {
+      if (this.checkDateFormat(userAge) && this.checkDateFormat(spouseAge) && this.props.cashflow) {
+        this.props.updateBirthdays(userAge, spouseAge)
+        this.setState({rows: generateRows(
+          this.props.cashflow,
+          true,
+          calculateAge(userAge),
+          calculateAge(spouseAge)
+        )})
+      }
+    } else {
+      window.alert("Enter your birthday, or both you and your spouse's birthday")
     }
+  }
+
+  generateRowDetails({row}) {
+    return (
+      <div>
+        <Grid
+        rows={row.detailRows}
+        columns={row.detailColumns}>
+          <TableView />
+          <TableHeaderRow />
+        </Grid>
+      </div>
+    )
   }
 
   render() {
     const {rows, columns} = this.state
-    console.log('columns are: ', columns)
     console.log('rows are: ', rows)
 
     return (
@@ -72,11 +106,13 @@ class CashProjComponent extends React.Component {
           <Grid
             rows={rows}
             columns={columns}>
+            <RowDetailState />
             <PagingState pageSize={5} defaultPageSize={5} />
             <LocalPaging />
             <TableView />
             <TableHeaderRow />
             <PagingPanel />
+            <TableRowDetail template={this.generateRowDetails} />
           </Grid>
         </div>
       </div>
@@ -92,7 +128,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  showProjections(userBirthday, spouseBirthday) {
+  updateBirthdays(userBirthday, spouseBirthday) {
     dispatch(viewCashflow(userBirthday, spouseBirthday))
   }
 })

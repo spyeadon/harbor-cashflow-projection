@@ -15,9 +15,9 @@ export const setBirthdays = (userBirthday, spouseBirthday) => ({
 
 export const viewCashflow = (userBirthday, spouseBirthday) =>
   dispatch => {
-    dispatch(setBirthdays(userBirthday, spouseBirthday))
-    if (spouseBirthday) dispatch(toggleSpouse(true))
+    if (spouseBirthday.length) dispatch(toggleSpouse(true))
     else dispatch(toggleSpouse(false))
+    dispatch(setBirthdays(userBirthday, spouseBirthday))
   }
 
 const CASHFLOW = 'CASHFLOW'
