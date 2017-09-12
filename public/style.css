@@ -1,0 +1,28 @@
+.detail-row {
+  width: 300px;
+}
+
+.cashflow-container {
+  margin: auto;
+  width: 800px;
+}
+
+.grid-container {
+  width: 800px;
+}
+
+.individual-data-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+body {
+  background-color: lightsteelblue;
+  font-family: proxima-nova,Helvetica Neue,Helvetica,Arial,sans-serif
+}
+
+#logo {
+  width: 75px;
+  float: left;
+  margin-right: 40px;
+}

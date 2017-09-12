@@ -68,13 +68,12 @@ class CashProjComponent extends React.Component {
 
   generateRowDetails({row}) {
     return (
-      <div>
-        <Grid
-        rows={row.detailRows}
-        columns={row.detailColumns}>
-          <TableView />
-          <TableHeaderRow />
-        </Grid>
+      <div className="individual-data-container">
+        {row.detailColumns.map(dataPoint =>
+          <p key={dataPoint.name} className="detail-row">
+            <strong>{dataPoint.title}</strong>: {row.detailRows[0][dataPoint.name]}
+          </p>
+        )}
       </div>
     )
   }
@@ -84,10 +83,12 @@ class CashProjComponent extends React.Component {
     console.log('rows are: ', rows)
 
     return (
-      <div>
-        <h3>
+      <div className="cashflow-container">
+        <img id="logo" src="/Harbor-logo.png" />
+        <h2>Cashflow Projection Chart</h2>
+        <h4>
           Please enter your birthday, and your spouse's birthday (<i>if applicable</i>) in the form below!
-        </h3>
+        </h4>
         <span>Use the format: mm/dd/yyyy</span>
         <form
         id="birthday-form"
@@ -102,7 +103,7 @@ class CashProjComponent extends React.Component {
           />
           <input type="submit" value="View Cashflow Projection" />
         </form>
-        <div>
+        <div className="grid-container">
           <Grid
             rows={rows}
             columns={columns}>
