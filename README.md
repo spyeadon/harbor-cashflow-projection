@@ -1,3 +1,9 @@
-# Harbor Cashflow Projects Sample Project
+# Harbor Cashflow Sample Project
 
-* README details inc.
+## To run
+
+* clone/fork repository
+* npm install
+* npm run seed (for cashflow dummy data)
+* npm run dev
+* open localhost:1337
