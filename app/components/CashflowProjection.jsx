@@ -84,7 +84,6 @@ class CashProjComponent extends React.Component {
 
   render() {
     const {rows, columns} = this.state
-    console.log('rows are: ', rows)
 
     return (
       <div className="cashflow-container">
