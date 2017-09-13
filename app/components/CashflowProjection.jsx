@@ -8,6 +8,8 @@ import {
 import {
   Grid, TableView, TableHeaderRow, PagingPanel, TableRowDetail
 } from '@devexpress/dx-react-grid-material-ui'
+import Input from 'material-ui/Input'
+import Button from 'material-ui/Button'
 
 class CashProjComponent extends React.Component {
   constructor(props) {
@@ -20,6 +22,8 @@ class CashProjComponent extends React.Component {
         { name: 'social_security', title: 'Social Security' },
         { name: 'asset_income', title: 'Asset Income' },
         { name: 'total', title: 'Combined Income' },
+        { name: 'taxes', title: 'Taxes(Est.)' },
+        { name: 'taxed_income', title: 'After-Tax Income' }
       ]
     }
     this.renderProjections = this.renderProjections.bind(this)
@@ -89,19 +93,19 @@ class CashProjComponent extends React.Component {
         <h4>
           Please enter your birthday, and your spouse's birthday (<i>if applicable</i>) in the form below!
         </h4>
-        <span>Use the format: mm/dd/yyyy</span>
         <form
         id="birthday-form"
         onSubmit={this.renderProjections} >
-          <input
+          <Input
             name="userBirthday"
-            placeholder='Your Birthday'
+            placeholder='Your Birthday*'
           />
-          <input
+          <Input
             name="spouseBirthday"
-            placeholder='Spouse Birthday'
+            placeholder='Spouse Birthday*'
           />
-          <input type="submit" value="View Cashflow Projection" />
+          <Button raised color="default" type="submit">View Chart</Button>
+          <span className="date-format">*Use the format: mm/dd/yyyy</span>
         </form>
         <div className="grid-container">
           <Grid
